@@ -32,9 +32,10 @@ _reset:
     bl init_cpu
     bl setup_clk
     bl setup_mem
+    bl init_uart
 
     @ copy kernal codes.
-    bl osload
+    bl load_kernel
     b .
 undefined_instruction:
     B .
@@ -51,7 +52,7 @@ irq:
 fiq:
     B .
 
-osload:
+load_kernel:
     ldr r0,_OS_ROM_BASE
     ldr r1,_OS_RAM_BASE
     ldr r2,_OS_END
@@ -74,6 +75,44 @@ _OS_RAM_BASE:
 
 _OS_END:
     .word __kernel_end
+
+init_uart:
+    /* set GPIO to enable UART */
+    @ GPIO setting for UART for UART0/1
+    ldr r0, =0x11400000
+    ldr r1, =0x22222222
+    str     r1, [r0]
+    ldr r0, =0x11400020
+    ldr r1, =0x222222
+    str r1, [r0]
+
+    ldr r0, =EXYNOS4X12_CLOCK_BASE   @0x1003_0000
+    ldr r1, =CLK_SRC_PERIL0_VAL     @0x666666
+    ldr r2, =CLK_SRC_PERIL0_OFFSET
+    str r1, [r0, r2]
+    ldr r1, =CLK_DIV_PERIL0_VAL     @0x777777
+    ldr r2, =CLK_DIV_PERIL0_OFFSET
+    str r1, [r0, r2]
+
+    ldr r0, =ELFIN_UART_CONSOLE_BASE        @0xEC000000
+    ldr r1, =0x111
+    str r1, [r0, #UFCON_OFFSET]
+
+    mov r1, #0x3
+    str r1, [r0, #ULCON_OFFSET]
+
+    ldr r1, =0x3c5
+    str r1, [r0, #UCON_OFFSET]
+
+    ldr r1, =UART_UBRDIV_VAL    @0x2B /*  UDIV(43) = ((82,500,000 / 16 / 115200) - 1) */
+    str r1, [r0, #UBRDIV_OFFSET]
+
+    ldr r1, =UART_UDIVSLOT_VAL  @0xC /* UFRACVAL(12) = ((((82,500,000 / 16 / 115200) - 1) - 43) * 16) */
+    str r1, [r0, #UDIVSLOT_OFFSET]
+
+    @ldr r1, =0x4f4f4f4f
+    @str r1, [r0, #UTXH_OFFSET]      @'O'
+    mov     pc, lr
 
 disable_watchdog:
     ldr r0, =EXYNOS4X12_WATCHDOG_BASE

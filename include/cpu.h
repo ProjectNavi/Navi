@@ -317,6 +317,51 @@
 #define DMC_QOSCONTROL15                0xD8
 #define DMC_QOSCONFIG15                 0xDC
 
+/*
+ * UART
+ */
+#define ELFIN_UART_BASE                 0x13800000
+
+#define ELFIN_UART0_OFFSET              0x00000
+#define ELFIN_UART1_OFFSET              0x10000
+#define ELFIN_UART2_OFFSET              0x20000
+#define ELFIN_UART3_OFFSET              0x30000
+
+#if defined(CONFIG_SERIAL1)
+#define ELFIN_UART_CONSOLE_BASE (ELFIN_UART_BASE + ELFIN_UART0_OFFSET)
+#elif defined(CONFIG_SERIAL2)
+#define ELFIN_UART_CONSOLE_BASE (ELFIN_UART_BASE + ELFIN_UART1_OFFSET)
+#elif defined(CONFIG_SERIAL3)
+#define ELFIN_UART_CONSOLE_BASE (ELFIN_UART_BASE + ELFIN_UART2_OFFSET)
+#elif defined(CONFIG_SERIAL4)
+#define ELFIN_UART_CONSOLE_BASE (ELFIN_UART_BASE + ELFIN_UART3_OFFSET)
+#else
+#define ELFIN_UART_CONSOLE_BASE (ELFIN_UART_BASE + ELFIN_UART0_OFFSET)
+#endif
+
+#define ULCON_OFFSET                    0x00
+#define UCON_OFFSET                     0x04
+#define UFCON_OFFSET                    0x08
+#define UMCON_OFFSET                    0x0C
+#define UTRSTAT_OFFSET                  0x10
+#define UERSTAT_OFFSET                  0x14
+#define UFSTAT_OFFSET                   0x18
+#define UMSTAT_OFFSET                   0x1C
+#define UTXH_OFFSET                     0x20
+#define URXH_OFFSET                     0x24
+#define UBRDIV_OFFSET                   0x28
+#define UDIVSLOT_OFFSET                 0x2C
+#define UINTP_OFFSET                    0x30
+#define UINTSP_OFFSET                   0x34
+#define UINTM_OFFSET                    0x38
+
+#define UTRSTAT_TX_EMPTY                BIT2
+#define UTRSTAT_RX_READY                BIT0
+#define UART_ERR_MASK                   0xF
+
+#define UART_UBRDIV_VAL                 0x35     /* (SCLK_UART/(115200*16) -1) */
+#define UART_UDIVSLOT_VAL               0x3     /*((((SCLK_UART*10/(115200*16) -10))%10)*16/10)*/
+
 #ifndef __ASSEMBLY__
 //#include <asm/io.h>
 /* CPU detection macros */

@@ -34,7 +34,7 @@ CFLAGS                  += -ggdb
 
 OFLAGS                  := -O binary -R .note -R .comment -S
 LDFLAGS                 := -nostdlib -nostartfiles -nodefaultlibs -static -X
-LDRELOC					:= -r
+LDRELOC                 := -r
 LIBGCC                  := $(shell $(CC) -print-libgcc-file-name)
 LDSCRIPT                := -T $(TOPDIR)/script/$(TARGET_CPU)/kernel.lds
 
