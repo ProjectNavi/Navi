@@ -1,7 +1,6 @@
 #include <kernel.h>
 
 .global _start
-.extern _main
 .text
 _start: 
 ResetEntry   : b _reset
@@ -34,7 +33,8 @@ _reset:
     bl setup_clk
     bl setup_mem
 
-    bl _main
+    @ copy kernal codes.
+    bl osload
     b .
 undefined_instruction:
     B .
@@ -51,6 +51,29 @@ irq:
 fiq:
     B .
 
+osload:
+    ldr r0,_OS_ROM_BASE
+    ldr r1,_OS_RAM_BASE
+    ldr r2,_OS_END
+
+copy_loop:
+    ldr r3,[r0],#4
+    str r3,[r1],#4
+    cmp r0,r2
+    blt copy_loop
+
+jump_kernel:
+    ldr pc,_OS_RAM_BASE
+    .balign 4
+
+_OS_ROM_BASE:
+    .word __kernel_start
+
+_OS_RAM_BASE:
+    .word OS_RAM_BASE
+
+_OS_END:
+    .word __kernel_end
 
 disable_watchdog:
     ldr r0, =EXYNOS4X12_WATCHDOG_BASE

@@ -9,7 +9,7 @@ include                 $(TOPDIR)/Config.mk
 all: compile $(TARGET) result
 
 $(ELF): $(addsuffix /target.o,$(SUBDIRS))
-	$(LD) $(LDFLAGS) $(LDSCRIPT) -N $^ $(LIBGCC) -o $@
+	cp $^ $@
 	$(NM) $(ELF) | grep -v '\(compiled\)\|\(\.o$$\)\|\( [aUw] \)\|\(\.\.ng$$\)\|\(LASH[RL]DI\)' | sort > Symbols.map
 
 $(TARGET): $(ELF)

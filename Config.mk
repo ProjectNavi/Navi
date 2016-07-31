@@ -17,6 +17,7 @@ RM                      := /bin/rm -rf
 
 INCLUDES                := -I. -I$(TOPDIR)/include
 DEFINES                 := -D__ARCH_$(TARGET_ARCH)__ -D__CPU_$(TARGET_CPU)__ -D__BOARD_$(TARGET_BOARD)__
+DEFINES                 += -DOS_RAM_BASE=0x40100000
 DEFINES                 += -DDEBUG
 
 CFLAGS                  := -nostdinc 
