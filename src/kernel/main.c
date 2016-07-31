@@ -33,4 +33,6 @@ void kmain(void)
         uart_putc(str[i]);
         i++;
     }
+
+    while (1);
 }
