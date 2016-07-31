@@ -1,6 +1,6 @@
 TOPDIR	= $(shell pwd)
 
-SUBDIRS                 := common
+SUBDIRS                 := src
 TARGET                  := navi.img
 ELF                     := navi.elf
 
@@ -14,6 +14,10 @@ $(ELF): $(addsuffix /target.o,$(SUBDIRS))
 
 $(TARGET): $(ELF)
 	$(OBJCOPY) $(OFLAGS) $^ $@
+
+# Emulator
+run: all
+	gnome-terminal --hide-menubar -e "qemu-system-arm -M smdkc210 -display none -serial stdio -kernel $(TARGET)" &
 
 result:
 	@$(SIZE) $(ELF)
