@@ -32,7 +32,7 @@ _reset:
     bl disable_watchdog
     bl init_cpu
     bl setup_clk
-    @bl setup_mem
+    bl setup_mem
 
     bl _main
     b .
@@ -85,7 +85,7 @@ init_cpu:
     mcr p15, 0, r0, c1, c0, 0
 
     mov pc, lr
-/*
+
 setup_mem:
     @ Async bridge configuration at CPU_core
     @ 1: half_sync
@@ -94,7 +94,7 @@ setup_mem:
     mov r1, #1
     str r1, [r0]
 
-    ldr r0, =MIU_BASE
+    ldr r0, =EXYNOS4X12_DMC_CTRL_BASE
 
     ldr	r1, =0x20001507
     str	r1, [r0, #MIU_INTLV_CONFIG]
@@ -104,7 +104,6 @@ setup_mem:
     str	r1, [r0, #MIU_INTLV_END_ADDR]
     ldr	r1, =0x00000001
     str	r1, [r0, #MIU_MAPPING_UPDATE]
-
 
     @ DREX0
 
@@ -367,7 +366,6 @@ setup_mem:
     str	r1, [r0, #DMC_CONCONTROL]
 
     mov pc, lr
-*/
 
 setup_clk:
     ldr r0, =EXYNOS4X12_CLOCK_BASE   @0x1003_0000
