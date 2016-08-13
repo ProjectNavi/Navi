@@ -16,7 +16,8 @@ all : kernel
 	cp $(TARGET) ../
 
 kernel: compile $(OBJS)
-	$(LD) $(OBJS) -o Kernel -Ttext 0x40100000 -N
+	$(LD) $(KERNELLDSCRIPT) $(OBJS) -o Kernel -N
+	#$(LD) $(OBJS) -o Kernel -Ttext 0x40100000 -N
 	$(OBJCOPY) Kernel kernel.bin -O binary
 
 compile:

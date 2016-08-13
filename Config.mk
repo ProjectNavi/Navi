@@ -36,8 +36,8 @@ OFLAGS                  := -O binary -R .note -R .comment -S
 LDFLAGS                 := -nostdlib -nostartfiles -nodefaultlibs -static -X
 LDRELOC                 := -r
 LIBGCC                  := $(shell $(CC) -print-libgcc-file-name)
-LDSCRIPT                := -T $(TOPDIR)/script/$(TARGET_CPU)/kernel.lds
-
+LDSCRIPT                := -T $(TOPDIR)/script/$(TARGET_CPU)/boot.lds
+KERNELLDSCRIPT                := -T $(TOPDIR)/script/kernel/kernel.lds
 
 .SUFFIXES : .o .c .S
 

@@ -19,7 +19,8 @@ void uart_putc(char ch) {
         volatile unsigned long UBRDIV;
     } S5PC11X_UART;
 
-    S5PC11X_UART *const uart = (S5PC11X_UART *)0x13800000;
+    S5PC11X_UART *const uart = (S5PC11X_UART *)0xF3800000;
+    //S5PC11X_UART *const uart = (S5PC11X_UART *)0x13800000;
 
     while (!(uart->UTRSTAT & 0x2));
 
