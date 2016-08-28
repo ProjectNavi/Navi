@@ -1,5 +1,8 @@
 #include "kernel.h"
 
+void uart_init() {
+}
+
 void uart_putc(char ch) {
     typedef struct {
         volatile unsigned long ULCON;
@@ -23,4 +26,37 @@ void uart_putc(char ch) {
     while (!(uart->UTRSTAT & 0x2));
 
     uart->UTXH = ch;
+
+    if (ch == '\n') {
+        while (!(uart->UTRSTAT & 0x2));
+        uart->UTXH = '\r';
+    }
+}
+
+void uart_puts(const char* s) {
+    while (*s)
+        uart_putc(*s++);
+}
+
+void uart_puthex(const unsigned int value) {
+    char ch;
+    int i;
+    char buffer[11];
+
+    buffer[0] = '0';
+    buffer[1] = 'x';
+
+    for (i = 7; i >= 0; i--) {
+        ch = (char)((value >> (i * 4)) & 0x0f);
+        if (ch > 9) ch = (ch - 10) + 'a';
+        else ch = ch + '0';
+        buffer[9 - i] = ch;
+    }
+    buffer[10] = '\0';
+    uart_puts(buffer);
+}
+
+void uart_puthexnl(const unsigned int value) {
+    uart_puthex(value);
+    uart_putc('\n');
 }
